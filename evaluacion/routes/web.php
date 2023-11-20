@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -16,13 +19,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-route::get('/', function() {
+Route::get('/', function() {
     return view('index');
-});
+})->name('system.index')->middleware('guest');
+
+// auth
 
 
 
-Route::get('create_occupation',[OccupationController::class,'create'])->name('create_occupation');
+
+Route::get('create_occupation',[OccupationController::class,'create'])->name('create_occupation')->middleware('guest');
 Route::post('save_occupation',[OccupationController::class,'store'])->name('save_occupation');
 Route::get('/occupation/indexOcupation',[OccupationController::class, 'index'])->name('occupations.index');
 Route::delete('/occupation/deleteOcupation/{id}',[OccupationController::class, 'destroy'])->name('occupations.destroy');  
@@ -39,10 +45,15 @@ Route::get('role/update/{role}', [RoleController::class, 'edit'])->name('role.up
 Route::put('role/{role}', [RoleController::class, 'update'])->name('role.editRole');
 
 // users routes
-Route::get('/users/indexUsers',[UserController::class, 'index'])->name('users.index');
+Route::get('/users/indexUsers',[UserController::class, 'index'])->name('users.index')->middleware('auth');
 Route::get('/users/CreateUser', [UserController::class, 'create'])->name('users.createUser');
 Route::post('users/CreateUser', [UserController::class, 'store'])->name('users.storeUser');
-Route::delete('/users/deleteUser/{user}', [UserController::class, 'destroy'])->name('users.destroyUser');
+Route::delete('/users/deleteUser/{user}', [UserController::class, 'destroy'])->name('users.destroyUser')->middleware('auth');
 
+// candidates routes
 
+Route::get('/candidates/index', [CandidateController::class, 'index'])->name('candidates.index');;
 
+Route::get('login', [LoginController::class, 'index'])->name('login.form')->middleware('guest');
+Route::post('login/validate', [LoginController::class, 'store'])->name('login.validate')->middleware('guest');
+Route::post('logout', [LogoutController::class, 'store'])->name('logout');

@@ -7,6 +7,10 @@
     <title>Document</title>
 </head>
 <body>
+    <form action="{{route('logout')}}" method="post">
+        @csrf
+        <button>Cerrar sesion</button>
+    </form>
     <table>
         <thead>
             <tr>
@@ -14,6 +18,7 @@
                 <th>Numero de documento</th>
                 <th>Nombre</th>
                 <th>Telefono</th>
+                <th>Rol</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +28,7 @@
                     <td>{{$user->number_document}}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->telephone}}</td>
+                    <td>{{$user->role->name}}</td>
                     <td>
                         <form action="{{route('users.destroyUser', ['user' => $user->id])}}" method="POST">
                             @csrf

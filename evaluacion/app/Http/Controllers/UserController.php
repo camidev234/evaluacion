@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
+use App\Models\Recruiter;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -39,16 +42,31 @@ class UserController extends Controller
     {
         $newUser = new User();
 
-        $newUser->name = $request->name;
+        $newUser->name = strtoupper($request->name);
         $newUser->email = $request->email;
         $newUser->birthdate = $request->birthdate;
-        $newUser->telephone = $request->telephone;
+        $newUser->telephone =$request->telephone;
         $newUser->password = $request->password;
         $newUser->phone_number = $request->phone_number;
         $newUser->number_document = $request->number_document;
         $newUser->role_id = $request->role_id;
 
+
         $newUser->save();
+
+        if ($request->role_id == 1){
+            $newCandidate = new Candidate();
+
+            $newCandidate->user_id = $newUser->id;
+
+            $newCandidate->save();
+        } else if ($request->role_id == 2){
+            $newRecruiter = new Recruiter();
+
+            $newRecruiter->user_id = $newUser->id;
+
+            $newRecruiter->save();
+        }
 
         return redirect()->route('users.index');
         
